@@ -1,0 +1,13 @@
+%dw 2.0
+
+type auto_31b7e971_68cb_4bbb_819d_929b36fa3e79_Output_Payload = {
+  Description: String, 
+  sysId: Number, 
+  name: String, 
+  patentName: String, 
+  Id: String, 
+  category: String, 
+  researchCenter: "ARC" | "SSC" | "LARC" | "JPL" | "MSFC" | "GSFC" | "GRC" | "KSC" | "JSC" | "DFRC", 
+  _?: Any
+} {"description": "data type for patents"}
+

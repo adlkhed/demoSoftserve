@@ -1,0 +1,8 @@
+%dw 2.0
+
+type auto_a3c5aa63_25da_4474_b73a_317d84f52447_Output_Payload = {|
+  message: String, 
+  category: Null, 
+  research: Null
+|}
+

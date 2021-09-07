@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>71594e4c-923c-41e3-86db-fc5fc6911087</groupId>
+  <artifactId>techsmthnasa</artifactId>
+  <version>1.0.3</version>
+  <name>techSmthNASA</name>
+  <properties>
+    <classifier>raml</classifier>
+    <main>techsmthnasa.raml</main>
+    <originalFormatVersion>1.0</originalFormatVersion>
+    <apiVersion>v1</apiVersion>
+    <projectId>4c9052cf-e375-4edf-ba91-196487c7b541</projectId>
+    <branchId>master</branchId>
+    <commitId>149d0492c9db5ef74983579cdf6ae7921287a0ac</commitId>
+    <type>rest-api</type>
+    <mainFile>techsmthnasa.raml</mainFile>
+  </properties>
+  <repositories>
+    <repository>
+      <id>anypoint-exchange</id>
+      <url>https://maven.anypoint.mulesoft.com/api/v3/maven</url>
+    </repository>
+  </repositories>
+</project>
