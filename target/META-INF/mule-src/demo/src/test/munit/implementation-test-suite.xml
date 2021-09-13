@@ -204,7 +204,6 @@ output application/json
 				<ee:variables>
 				</ee:variables>
 			</ee:transform>
-			<flow-ref doc:name="Flow-ref to getBySysId" doc:id="b0401071-41d3-47b9-a0a4-374cc6410922" name="getBySysId"/>
 			<ee:transform doc:name="Set Expected result" doc:id="1cc5b020-641a-478d-aa9e-ffe7e05bf6cd" >
 				<ee:message />
 				<ee:variables >
@@ -310,7 +309,6 @@ output application/json
 					</ee:message>
 					<ee:variables />
 				</ee:transform>
-				<flow-ref doc:name="Flow-ref to getBySysId" doc:id="c2a8f25b-178d-4595-bf29-ba25885c80a9" name="getBySysId" />
 				<ee:transform doc:name="Set Expected result" doc:id="4bc39f64-3c17-4f65-b6c8-9acf4a21f8c6">
 					<ee:message />
 					<ee:variables>
@@ -410,7 +408,6 @@ output application/json
 				</ee:message>
 				<ee:variables />
 			</ee:transform>
-			<flow-ref doc:name="Flow-ref to getByResearch" doc:id="b675ffa4-4768-49c9-8ffa-748dda3b58f7" name="getByResearch"/>
 			<ee:transform doc:name="Set Expected Result" doc:id="4438a438-62de-4624-8f9c-af28054880b1" >
 				<ee:message />
 				<ee:variables >
@@ -527,7 +524,6 @@ output application/json
 				</ee:message>
 				<ee:variables />
 			</ee:transform>
-			<flow-ref doc:name="Flow-ref to getByResearch" doc:id="0101e9dd-999b-4f07-91c2-0fa1ae2a5058" name="getByResearch" />
 			<ee:transform doc:name="Set Expected Result" doc:id="1bfaa069-e037-4119-8426-0bc5ab4d97b3">
 				<ee:message />
 				<ee:variables>
@@ -631,7 +627,6 @@ output application/json
 				</ee:message>
 				<ee:variables />
 			</ee:transform>
-			<flow-ref doc:name="Flow-ref to getByCategory" doc:id="b3e823ee-56d1-4a8e-a020-a88a03ff133f" name="getByCategory"/>
 			<ee:transform doc:name="Set Expected Result" doc:id="7b8ce0f5-377d-429c-94b5-844b6fddab8c" >
 				<ee:message />
 				<ee:variables >
@@ -749,7 +744,6 @@ output application/json
 					</ee:message>
 					<ee:variables />
 				</ee:transform>
-				<flow-ref doc:name="Flow-ref to getByCategory" doc:id="20b3334a-9c65-4992-a1b5-bee22984f3b9" name="getByCategory" />
 				<ee:transform doc:name="Set Expected Result" doc:id="87066e3f-b7e0-40b7-bfb5-6460a417d64e">
 					<ee:message />
 					<ee:variables>

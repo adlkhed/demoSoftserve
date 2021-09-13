@@ -7,6 +7,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd
 http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<validation:config name="Validation_Config" doc:name="Validation Config" doc:id="f76520a3-9ac1-4e18-9ec0-c85207ad5a5e" />
 	<sub-flow name="getData" doc:id="a44a749d-7d9e-48b8-a6b4-ed8345355e97" >
 		<logger level="INFO" doc:name="Starting Logger" doc:id="1ecec0ea-c3da-4549-8d06-7ed7f7a2ef1b" message="#[payload]"/>
 		<http:request method="GET" doc:name="Get Data from NASA api" doc:id="343efe74-f02c-4adc-af4a-dc34aed17bc3" config-ref="HTTP_Request_configuration" path="/techtransfer/patent/?api_key=trV4BkJBohwK9rrg02x0VQUWnKNIzrkwyi54v4W7">
@@ -28,8 +29,6 @@ payload.results map(value, index)-> {
 output application/json
 ---
 payload map(val,ind)-> {
-	sysId: val.id,
-	Id: val.d0,
 	category: val.d5,
 	name: val.d1,
 	patentName: val.d2,
@@ -46,9 +45,11 @@ payload map(val,ind)-> {
 	</flow>
 	<sub-flow name="getUniversal" doc:id="a3c5aa63-25da-4474-b73a-317d84f52447" >
 		<set-variable value='#[message.attributes.queryParams.research default ""]' doc:name="Set Research" doc:id="5fec3337-f66d-494a-8a77-87da7d40d7be" variableName="research" />
-		<validation:matches-regex doc:name="Matches regex" doc:id="66b09c52-b126-4b5e-bcf1-02d1f3f913d9" value="#[vars.resrarch]" regex='#[["ARC", "JPL", "JSC", "KSC", "DFRC", "GSFC", "MSFC", "GRC", "LARC", "SSC"]]'>
-			<error-mapping sourceType="VALIDATION:MISMATCH" targetType="APP:RESEARCH_INVALID" />
-		</validation:matches-regex>
+		<validation:is-false doc:name="Is false" doc:id="98efa4c3-0522-4cc9-ae6d-b762c69b8df3" expression='#[["ARC", "JPL", "JSC", "KSC", "DFRC", "GSFC", "MSFC", "GRC", "LARC", "SSC"].contains(vars.research)]' message='#["lul"]'>
+			<error-mapping sourceType="VALIDATION:INVALID_BOOLEAN" targetType="APP:RESEARCH_INVALID" />
+			<error-mapping sourceType="EXPRESSION" targetType="APP:RESEARCH_INVALID" />
+			<error-mapping targetType="APP:RESEARCH_INVALID" />
+		</validation:is-false>
 		<set-variable value='#[message.attributes.queryParams.category default ""]' doc:name="Set Category" doc:id="54c3933d-4815-4cca-90cb-3b326984e3ba" variableName="category" />
 		<flow-ref doc:name="Get Data" doc:id="3ad78811-894d-480d-98a4-9a74753b2cfb" name="getData" />
 		<ee:transform doc:name="Filter" doc:id="ed7e4215-75af-4f10-b7e0-9caecf1597f1" >
@@ -83,98 +84,5 @@ output application/json
 				<set-payload value="#[payload]" doc:name="Set Payload" doc:id="ebe5ffc5-70bd-4da3-8921-f7c8058d9a20" />
 			</when>
 		</choice>
-	</sub-flow>
-	<sub-flow name="getBySysId" doc:id="31b7e971-68cb-4bbb-819d-929b36fa3e79" >
-		<logger level="INFO" doc:name="Starting Logger" doc:id="d3ac3d7f-75d9-4fea-a18c-7e411b704846" message="#[payload]" />
-		<set-variable value="#[attributes.uriParams.sysId]" doc:name="Save ID from URI" doc:id="89ccd096-ee39-4237-a3e9-18c52d1e1563" variableName="ID"/>
-		<flow-ref doc:name="Get Data" doc:id="9691c03f-e602-4fa4-a765-a93ff1b61b0a" name="getData"/>
-		<ee:transform doc:name="Search by ID" doc:id="abdc037e-f184-4300-8f91-4963a8297bfe">
-			<ee:message>
-				<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-payload filter((item, ind) -> item.sysId  == vars.ID as Number)
-]]></ee:set-payload>
-			</ee:message>
-		</ee:transform>
-		<choice doc:name="Check the payload" doc:id="25762fd8-6551-4ac2-88a6-49695c016f77" >
-			<when expression="#[payload == []]" >
-				<ee:transform doc:name="Transform Message" doc:id="68ad64c8-78a8-4727-968d-2b063ea1bc4f">
-					<ee:message>
-						<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-	message: "No element with such ID"
-}]]></ee:set-payload>
-					</ee:message>
-				</ee:transform>
-				<set-payload value="#[payload]" doc:name="Set Payload" doc:id="674f45f6-b30e-4a92-9f88-982e4876c65d" />
-			</when>
-		</choice>
-		<logger level="INFO" doc:name="End Logger" doc:id="6ac8d966-489a-4d85-8948-4b753cababca" />
-	</sub-flow>
-	<sub-flow name="getByResearch" doc:id="26205a75-9f47-439b-9834-6cfe0df4c0a2" >
-		<set-variable doc:name="Save research Enum" doc:id="ddd4bceb-e88c-40b0-9380-0a6c481c9ac8" variableName="research" value="#[message.attributes.queryParams.research]" />
-		<logger level="INFO" doc:name="Starting Logger" doc:id="fadfe463-cd20-42d2-a175-f200f19d9d6c" message="#[payload]" />
-		<set-variable value='#[["ARC", "JPL", "JSC", "KSC", "DFRC", "GSFC", "MSFC", "GRC", "LARC", "SSC"]]' doc:name="Set rpossible research enums list" doc:id="713bfcd3-6044-4e98-9a0e-2a0b34bac765" variableName="researchList"/>
-		<choice doc:name="Check if enum is valid" doc:id="5310310a-a84f-47f1-92f8-0acc06d7a606" >
-			<when expression="#[vars.researchList contains(vars.research)]">
-				<flow-ref doc:name="Get Data" doc:id="c294d481-1d6f-4f4b-b79e-4fd0ca6b7936" name="getData" />
-				<ee:transform doc:name="Search by research center name" doc:id="4b3e08b5-f6b3-483c-877b-43b8c4dff91c">
-			<ee:message>
-				<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-payload filter((item,ind) -> item.researchCenter == vars.research)
-]]></ee:set-payload>
-			</ee:message>
-		</ee:transform>
-			</when>
-			<otherwise>
-				<ee:transform doc:name="Transform Message" doc:id="291a81a8-91ec-4310-a723-3209aaa3723f">
-					<ee:message>
-						<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-	message: "Invalid enum value, try one from this list: ARC, JPL, JSC, KSC, DFRC, GSFC, MSFC, GRC, LARC, SSC"
-}]]></ee:set-payload>
-					</ee:message>
-				</ee:transform>
-				<set-payload value="#[payload]" doc:name="Set Payload" doc:id="5c2083b2-7bbb-4656-bfd4-76df25d77cc4" />
-			</otherwise>
-		</choice>
-		<logger level="INFO" doc:name="End Logger" doc:id="9d577ae4-1483-4bad-b982-3043c6f1446a" />
-	</sub-flow>
-	<sub-flow name="getByCategory" doc:id="61dccbbc-ae0d-4b5b-911e-a6f31801383c" >
-		<logger level="INFO" doc:name="Starting Logger" doc:id="fd5981f5-a844-468f-8151-25917c402b49" message="#[payload]" />
-		<set-variable value="#[attributes.queryParams.research]" doc:name="Save category" doc:id="d8b4a51d-2f0d-42aa-bf5f-eec63c16823e" variableName="category" />
-		<flow-ref doc:name="Get Data" doc:id="b4388df0-ce89-475c-918a-953d76bcf1cb" name="getData" />
-		<ee:transform doc:name="Search by category" doc:id="f973f6c7-c475-4788-b4a8-10060a10b39e">
-			<ee:message>
-				<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-payload filter((item,ind) -> item.category == vars.category)
-]]></ee:set-payload>
-			</ee:message>
-		</ee:transform>
-		<choice doc:name="Choice" doc:id="e1e78b87-070a-400d-9133-f7a7c1f8d948">
-			<when expression="#[payload == []]">
-				<ee:transform doc:name="Transform Message" doc:id="bdf2c3f9-b80c-4240-b4fb-cf07d0aa1617">
-					<ee:message>
-						<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-	message: "No items found"
-}]]></ee:set-payload>
-					</ee:message>
-				</ee:transform>
-				<set-payload value="#[payload]" doc:name="Set Payload" doc:id="74f3ba2c-d9e9-497f-8cad-074cb05965a1" />
-			</when>
-		</choice>
-		<logger level="INFO" doc:name="End Logger" doc:id="3adbdcb2-71e1-4849-aa64-c938b6e6b627" />
 	</sub-flow>
 </mule>
