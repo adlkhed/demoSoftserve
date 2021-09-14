@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd  http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
-    <apikit:config name="techsmthnasa-config" api="resource::71594e4c-923c-41e3-86db-fc5fc6911087:techsmthnasa:2.0.1:raml:zip:techsmthnasa.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <apikit:config name="techsmthnasa-config" api="techsmthnasa.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="afe2f07a-5073-4773-89a3-70163f4560d8">
         <http:listener-connection host="0.0.0.0" port="8081" />
     </http:listener-config>
     <http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="9af5b5de-73dc-419f-8487-c57d937a6adb">
         <http:request-connection host="api.nasa.gov" protocol="HTTPS" />
     </http:request-config>
+    <configuration-properties doc:name="Configuration properties" doc:id="5ef65a19-a346-4a89-a79e-adcdad14ede1" file="config.yaml" />
+	<configuration doc:name="Configuration" doc:id="665e2560-4116-4bae-9613-3af20567a68b" defaultErrorHandler-ref="errorHandlingError_Handler" />
 </mule>

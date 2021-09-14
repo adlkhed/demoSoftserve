@@ -1,4 +1,0 @@
-%dw 2.0
-
-type auto_61dccbbc_ae0d_4b5b_911e_a6f31801383c_Output_Payload = Array<{  Description: String,   sysId: Number,   name: String,   patentName: String,   Id: String,   category: String,   researchCenter: "ARC" | "SSC" | "LARC" | "JPL" | "MSFC" | "GSFC" | "GRC" | "KSC" | "JSC" | "DFRC",   _?: Any} {"description": "data type for patents"}>
-

@@ -1,8 +1,0 @@
-#http_listener
-http:
-  port: "8081"
-#patents
-patents:
-  protocol: "HTTPS"
-  host: "api.nasa.gov"
-  basepath: "/"

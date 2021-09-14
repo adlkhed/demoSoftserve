@@ -3,11 +3,11 @@
     <flow name="techsmthnasa-main">
         <http:listener config-ref="HTTP_Listener_config" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
-                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:response>
             <http:error-response statusCode="#[vars.httpStatus default 500]">
-                <http:body><![CDATA[#[payload]]]></http:body>
-                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:error-response>
         </http:listener>
         <apikit:router config-ref="techsmthnasa-config" />
@@ -95,11 +95,11 @@ output application/json
     <flow name="techsmthnasa-console">
         <http:listener config-ref="HTTP_Listener_config" path="/console/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
-                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:response>
             <http:error-response statusCode="#[vars.httpStatus default 500]">
-                <http:body><![CDATA[#[payload]]]></http:body>
-                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:error-response>
         </http:listener>
         <apikit:console config-ref="techsmthnasa-config" />
@@ -120,6 +120,6 @@ output application/json
         </error-handler>
     </flow>
     <flow name="get:\patents:techsmthnasa-config">
-        <flow-ref doc:name="Flow Reference" doc:id="abd2da56-bab2-474f-b7d8-a01df7442e74" name="getUniversal" />
+        <flow-ref doc:name="Flow Reference" doc:id="6d12c547-ef91-4d09-8af9-64641602c132" name="getUniversal" />
     </flow>
 </mule>

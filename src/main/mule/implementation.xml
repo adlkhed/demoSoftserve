@@ -10,7 +10,7 @@ http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mu
 	<validation:config name="Validation_Config" doc:name="Validation Config" doc:id="f76520a3-9ac1-4e18-9ec0-c85207ad5a5e" />
 	<sub-flow name="getData" doc:id="a44a749d-7d9e-48b8-a6b4-ed8345355e97" >
 		<logger level="INFO" doc:name="Starting Logger" doc:id="1ecec0ea-c3da-4549-8d06-7ed7f7a2ef1b" message="#[payload]"/>
-		<http:request method="GET" doc:name="Get Data from NASA api" doc:id="343efe74-f02c-4adc-af4a-dc34aed17bc3" config-ref="HTTP_Request_configuration" path="/techtransfer/patent/?api_key=trV4BkJBohwK9rrg02x0VQUWnKNIzrkwyi54v4W7">
+		<http:request method="OPTIONS" doc:name="Get Data from NASA api" doc:id="343efe74-f02c-4adc-af4a-dc34aed17bc3" config-ref="HTTP_Request_configuration" path="/techtransfer/patent/?api_key=trV4BkJBohwK9rrg02x0VQUWnKNIzrkwyi54v4W7">
 		</http:request>
 		<ee:transform doc:name="Make arrays into objects" doc:id="9ead146d-4a72-47c4-beee-c848a1280125">
 			<ee:message>
@@ -45,11 +45,6 @@ payload map(val,ind)-> {
 	</flow>
 	<sub-flow name="getUniversal" doc:id="a3c5aa63-25da-4474-b73a-317d84f52447" >
 		<set-variable value='#[message.attributes.queryParams.research default ""]' doc:name="Set Research" doc:id="5fec3337-f66d-494a-8a77-87da7d40d7be" variableName="research" />
-		<validation:is-false doc:name="Is false" doc:id="98efa4c3-0522-4cc9-ae6d-b762c69b8df3" expression='#[["ARC", "JPL", "JSC", "KSC", "DFRC", "GSFC", "MSFC", "GRC", "LARC", "SSC"].contains(vars.research)]' message='#["lul"]'>
-			<error-mapping sourceType="VALIDATION:INVALID_BOOLEAN" targetType="APP:RESEARCH_INVALID" />
-			<error-mapping sourceType="EXPRESSION" targetType="APP:RESEARCH_INVALID" />
-			<error-mapping targetType="APP:RESEARCH_INVALID" />
-		</validation:is-false>
 		<set-variable value='#[message.attributes.queryParams.category default ""]' doc:name="Set Category" doc:id="54c3933d-4815-4cca-90cb-3b326984e3ba" variableName="category" />
 		<flow-ref doc:name="Get Data" doc:id="3ad78811-894d-480d-98a4-9a74753b2cfb" name="getData" />
 		<ee:transform doc:name="Filter" doc:id="ed7e4215-75af-4f10-b7e0-9caecf1597f1" >
@@ -67,22 +62,8 @@ else
 	payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<choice doc:name="Copy_of_Check the payload" doc:id="ccb7b895-a3da-47cf-831e-39b14ba284d7" >
-			<when expression="#[payload == []]" >
-				<ee:transform doc:name="Make no elements msg" doc:id="f6974bcd-c332-49f8-a23d-475c41f32abd" >
-					<ee:message >
-						<ee:set-payload ><![CDATA[%dw 2.0
-output application/json
----
-{
-	message: "No elements found",
-	category: vars.category,
-	research: vars.research
-}]]></ee:set-payload>
-					</ee:message>
-				</ee:transform>
-				<set-payload value="#[payload]" doc:name="Set Payload" doc:id="ebe5ffc5-70bd-4da3-8921-f7c8058d9a20" />
-			</when>
-		</choice>
+		<validation:is-not-empty-collection doc:name="Is not empty collection" doc:id="9eb0a1b6-9c1b-4c61-97e7-8d9e5df7e6ec">
+			<error-mapping sourceType="VALIDATION:EMPTY_COLLECTION" targetType="APP:NO_ELEMENTS_FOUND" />
+		</validation:is-not-empty-collection>
 	</sub-flow>
 </mule>

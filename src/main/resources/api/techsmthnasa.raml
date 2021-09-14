@@ -6,8 +6,27 @@ types:
     !include /Types/Patent.raml
 
 /patents:
-  description: get all patents
+  description: get patents
   get:
+    queryParameters:
+      research:
+        type: string
+        enum:
+          - ARC
+          - JPL
+          - JSC
+          - KSC
+          - ARC
+          - DFRC
+          - GSFC
+          - MSFC
+          - GRC
+          - LARC
+          - SSC
+        required: false
+      category:
+        type: string
+        required: false
     responses:
       200:
         body:
@@ -18,18 +37,3 @@ types:
           application/json:
             example:
               message: "Bad request"
-  
-/patents/{sysId}:
-  description: get patent by id
-  get:
-    responses:
-      200:
-        body:
-          application/json:
-            type: Patent
-      400:
-        body:
-          application/json:
-            example:
-              message: "Bad request"    
-      
